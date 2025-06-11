@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// Middleware to authenticate token
 const authenticateToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
       return res.status(401).json({
@@ -16,7 +15,6 @@ const authenticateToken = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // Find user and check if still active
     const user = await User.findById(decoded.userId);
     if (!user || !user.isActive) {
       return res.status(401).json({
@@ -49,7 +47,6 @@ const authenticateToken = async (req, res, next) => {
   }
 };
 
-// Middleware to check if user is admin
 const requireAdmin = (req, res, next) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({
@@ -60,7 +57,6 @@ const requireAdmin = (req, res, next) => {
   next();
 };
 
-// Middleware to check if user is admin or accessing their own data
 const requireAdminOrSelf = (req, res, next) => {
   const requestedUserId = req.params.userId || req.params.id;
   const currentUserId = req.user._id.toString();
@@ -75,7 +71,6 @@ const requireAdminOrSelf = (req, res, next) => {
   });
 };
 
-// Generate JWT token
 const generateToken = (userId) => {
   return jwt.sign(
     { userId },

@@ -2,10 +2,8 @@ const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
 
-  // Log error
   console.error(err);
 
-  // Mongoose bad ObjectId
   if (err.name === 'CastError') {
     const message = 'Resource not found';
     error = {
@@ -14,7 +12,6 @@ const errorHandler = (err, req, res, next) => {
     };
   }
 
-  // Mongoose duplicate key
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue)[0];
     const message = `${field} already exists`;
@@ -24,7 +21,6 @@ const errorHandler = (err, req, res, next) => {
     };
   }
 
-  // Mongoose validation error
   if (err.name === 'ValidationError') {
     const errors = Object.values(err.errors).map(val => ({
       field: val.path,
@@ -38,7 +34,6 @@ const errorHandler = (err, req, res, next) => {
     };
   }
 
-  // JWT errors
   if (err.name === 'JsonWebTokenError') {
     error = {
       message: 'Invalid token',
@@ -61,14 +56,12 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-// Not found middleware
 const notFound = (req, res, next) => {
   const error = new Error(`Not found - ${req.originalUrl}`);
   error.statusCode = 404;
   next(error);
 };
 
-// Async handler wrapper
 const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 

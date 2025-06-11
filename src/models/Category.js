@@ -33,14 +33,12 @@ const categorySchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-// Virtual for subcategories
 categorySchema.virtual('subcategories', {
   ref: 'Category',
   localField: '_id',
   foreignField: 'parentCategory'
 });
 
-// Virtual for items count
 categorySchema.virtual('itemsCount', {
   ref: 'Item',
   localField: '_id',
@@ -48,7 +46,6 @@ categorySchema.virtual('itemsCount', {
   count: true
 });
 
-// Instance method to get category hierarchy
 categorySchema.methods.getHierarchy = async function() {
   let category = this;
   const hierarchy = [category.name];
@@ -65,20 +62,16 @@ categorySchema.methods.getHierarchy = async function() {
   return hierarchy.join(' > ');
 };
 
-// Static method to find active categories
 categorySchema.statics.findActiveCategories = function() {
   return this.find({ isActive: true }).populate('createdBy', 'username fullName');
 };
 
-// Static method to find root categories (no parent)
 categorySchema.statics.findRootCategories = function() {
   return this.find({ parentCategory: null, isActive: true });
 };
 
-// Pre-remove middleware to handle cascading deletes
 categorySchema.pre('remove', async function(next) {
   try {
-    // Check if there are any items in this category
     const Item = mongoose.model('Item');
     const itemsCount = await Item.countDocuments({ category: this._id });
     
@@ -88,7 +81,6 @@ categorySchema.pre('remove', async function(next) {
       return next(error);
     }
     
-    // Move subcategories to parent or make them root categories
     await this.constructor.updateMany(
       { parentCategory: this._id },
       { parentCategory: this.parentCategory }

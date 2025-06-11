@@ -1,6 +1,5 @@
 const Joi = require('joi');
 
-// User validation schemas
 const userSchemas = {
   register: Joi.object({
     username: Joi.string().min(3).max(30).required(),
@@ -25,7 +24,6 @@ const userSchemas = {
   })
 };
 
-// Category validation schemas
 const categorySchemas = {
   create: Joi.object({
     name: Joi.string().max(50).required(),
@@ -41,7 +39,6 @@ const categorySchemas = {
   })
 };
 
-// Supplier validation schemas
 const supplierSchemas = {
   create: Joi.object({
     name: Joi.string().max(100).required(),
@@ -83,7 +80,6 @@ const supplierSchemas = {
   })
 };
 
-// Item validation schemas
 const itemSchemas = {
   create: Joi.object({
     name: Joi.string().max(100).required(),
@@ -179,7 +175,6 @@ const itemSchemas = {
   })
 };
 
-// Generic validation middleware factory
 const validate = (schema) => {
   return (req, res, next) => {
     const { error, value } = schema.validate(req.body, {
@@ -205,7 +200,6 @@ const validate = (schema) => {
   };
 };
 
-// Query parameter validation
 const validateQuery = (schema) => {
   return (req, res, next) => {
     const { error, value } = schema.validate(req.query, {
@@ -231,7 +225,6 @@ const validateQuery = (schema) => {
   };
 };
 
-// Common query schemas
 const querySchemas = {
   pagination: Joi.object({
     page: Joi.number().integer().min(1).optional(),
