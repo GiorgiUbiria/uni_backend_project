@@ -81,6 +81,19 @@ A comprehensive inventory management system built with Node.js, Express, MongoDB
 - `DELETE /api/items/:id` - Delete item
 - `GET /api/items/low-stock` - Get low stock items
 
+### Products
+- `GET /api/products` - Get all products with pagination and filtering
+- `GET /api/products/search?title=query` - Search products by title with pagination
+- `GET /api/products/:id` - Get product by ID
+- `POST /api/products` - Create new product (Admin only)
+- `PUT /api/products/:id` - Update product (Admin only)
+- `PATCH /api/products/:id/specifications` - Update product specifications (Admin only)
+- `PATCH /api/products/:id/warehouse` - Update warehouse quantity (Admin only)
+- `DELETE /api/products/:id` - Delete product (Admin only)
+- `GET /api/products/stats` - Get product statistics (Admin only)
+- `GET /api/products/low-stock` - Get low stock products
+- `GET /api/products/warehouse/:warehouseName` - Get products by warehouse
+
 ## Project Structure
 
 ```

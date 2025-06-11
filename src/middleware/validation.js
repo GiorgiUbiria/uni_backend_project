@@ -175,6 +175,47 @@ const itemSchemas = {
   })
 };
 
+// Product validation schemas
+const productSchemas = {
+  create: Joi.object({
+    category: Joi.string().hex().length(24).required(),
+    title: Joi.string().max(200).required(),
+    price: Joi.number().min(0).required(),
+    warehouses: Joi.array().items(
+      Joi.object({
+        warehouseName: Joi.string().required(),
+        location: Joi.string().optional(),
+        quantity: Joi.number().min(0).required()
+      })
+    ).min(1).required(),
+    specifications: Joi.object().optional()
+  }),
+
+  update: Joi.object({
+    category: Joi.string().hex().length(24).optional(),
+    title: Joi.string().max(200).optional(),
+    price: Joi.number().min(0).optional(),
+    warehouses: Joi.array().items(
+      Joi.object({
+        warehouseName: Joi.string().required(),
+        location: Joi.string().optional(),
+        quantity: Joi.number().min(0).required()
+      })
+    ).optional(),
+    specifications: Joi.object().optional(),
+    isActive: Joi.boolean().optional()
+  }),
+
+  updateSpecifications: Joi.object({
+    specifications: Joi.object().required()
+  }),
+
+  updateWarehouse: Joi.object({
+    warehouseName: Joi.string().required(),
+    quantity: Joi.number().min(0).required()
+  })
+};
+
 const validate = (schema) => {
   return (req, res, next) => {
     const { error, value } = schema.validate(req.body, {
@@ -243,6 +284,17 @@ const querySchemas = {
     status: Joi.string().valid('active', 'discontinued', 'out_of_stock', 'pending').optional(),
     minQuantity: Joi.number().min(0).optional(),
     maxQuantity: Joi.number().min(0).optional()
+  }),
+
+  productsQuery: Joi.object({
+    page: Joi.number().integer().min(1).optional(),
+    limit: Joi.number().integer().min(1).max(100).optional(),
+    sort: Joi.string().optional(),
+    title: Joi.string().optional(),
+    category: Joi.string().hex().length(24).optional(),
+    minPrice: Joi.number().min(0).optional(),
+    maxPrice: Joi.number().min(0).optional(),
+    warehouseName: Joi.string().optional()
   })
 };
 
@@ -253,5 +305,6 @@ module.exports = {
   categorySchemas,
   supplierSchemas,
   itemSchemas,
+  productSchemas,
   querySchemas
 }; 

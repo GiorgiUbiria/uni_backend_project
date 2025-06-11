@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/categories');
 const supplierRoutes = require('./routes/suppliers');
 const itemRoutes = require('./routes/items');
+const productRoutes = require('./routes/products');
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/items', itemRoutes);
+app.use('/api/products', productRoutes);
 
 app.get('/api', (req, res) => {
   res.json({
@@ -89,6 +91,19 @@ app.get('/api', (req, res) => {
         'GET /api/items/low-stock': 'Get low stock items',
         'GET /api/items/:id': 'Get item by ID',
         'POST /api/items': 'Create item (admin)'
+      },
+      products: {
+        'GET /api/products': 'Get all products with pagination',
+        'GET /api/products/search': 'Search products by title with pagination',
+        'GET /api/products/stats': 'Get product statistics (admin)',
+        'GET /api/products/low-stock': 'Get low stock products',
+        'GET /api/products/warehouse/:warehouseName': 'Get products by warehouse',
+        'GET /api/products/:id': 'Get product by ID',
+        'POST /api/products': 'Create new product (admin)',
+        'PUT /api/products/:id': 'Update product (admin)',
+        'PATCH /api/products/:id/specifications': 'Update product specifications (admin)',
+        'PATCH /api/products/:id/warehouse': 'Update warehouse quantity (admin)',
+        'DELETE /api/products/:id': 'Delete product (admin)'
       }
     }
   });
